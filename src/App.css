@@ -47,6 +47,216 @@
   background-clip: text;
 }
 
+/* ========================================
+   LANDING PAGE
+   ======================================== */
+
+.landing-screen {
+  gap: 0;
+  animation: none;
+}
+
+/* Logo container */
+.landing-logo {
+  opacity: 0;
+  animation: landing-logo-enter 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+}
+
+.landing-logo-svg {
+  width: 120px;
+  height: 120px;
+  filter: drop-shadow(0 0 20px rgba(0, 229, 255, 0.3));
+}
+
+/* Outer ring draws in */
+.logo-ring {
+  opacity: 0;
+  stroke-dasharray: 350;
+  stroke-dashoffset: 350;
+}
+
+.logo-ring-outer {
+  animation: ring-draw 1.5s ease-out 0.5s forwards;
+}
+
+.logo-ring-inner {
+  animation: ring-draw-inner 1.2s ease-out 0.8s forwards;
+}
+
+@keyframes ring-draw {
+  to {
+    stroke-dashoffset: 0;
+    opacity: 0.4;
+  }
+}
+
+@keyframes ring-draw-inner {
+  to {
+    stroke-dashoffset: 0;
+    opacity: 0.25;
+  }
+}
+
+/* Orbiting dots pop in staggered */
+.logo-dot {
+  opacity: 0;
+  transform-origin: 60px 60px;
+}
+
+.logo-dot-1 { animation: dot-pop 0.4s ease 0.8s forwards, dot-orbit 20s linear 1.2s infinite; }
+.logo-dot-2 { animation: dot-pop 0.4s ease 0.95s forwards, dot-orbit 20s linear 1.35s infinite; }
+.logo-dot-3 { animation: dot-pop 0.4s ease 1.1s forwards, dot-orbit 20s linear 1.5s infinite; }
+.logo-dot-4 { animation: dot-pop 0.4s ease 1.25s forwards, dot-orbit 20s linear 1.65s infinite; }
+.logo-dot-5 { animation: dot-pop 0.4s ease 1.4s forwards, dot-orbit 20s linear 1.8s infinite; }
+.logo-dot-6 { animation: dot-pop 0.4s ease 1.55s forwards, dot-orbit 20s linear 1.95s infinite; }
+
+@keyframes dot-pop {
+  0% { opacity: 0; transform: scale(0); }
+  70% { transform: scale(1.4); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes dot-orbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Center pulse */
+.logo-center-pulse {
+  opacity: 0;
+  animation: center-pulse-enter 0.6s ease 0.4s forwards, center-breathe 3s ease-in-out 1s infinite;
+}
+
+@keyframes center-pulse-enter {
+  0% { opacity: 0; }
+  100% { opacity: 0.8; }
+}
+
+@keyframes center-breathe {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* Title */
+.landing-title {
+  opacity: 0;
+  animation: landing-title-enter 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1s forwards;
+  margin-top: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.landing-title .logo-text {
+  font-size: 3.5rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+}
+
+@keyframes landing-logo-enter {
+  0% { opacity: 0; transform: scale(0.5) translateY(20px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes landing-title-enter {
+  0% { opacity: 0; transform: translateY(15px); letter-spacing: 0.3em; }
+  100% { opacity: 1; transform: translateY(0); letter-spacing: 0.08em; }
+}
+
+/* Glowing login card */
+.landing-card {
+  width: 100%;
+  max-width: 400px;
+  padding: var(--space-2xl);
+  text-align: center;
+  position: relative;
+  opacity: 0;
+  animation: landing-card-enter 0.7s cubic-bezier(0.16, 1, 0.3, 1) 1.4s forwards;
+  border: 1px solid rgba(0, 229, 255, 0.12);
+  box-shadow:
+    0 0 30px rgba(0, 229, 255, 0.06),
+    0 0 60px rgba(0, 229, 255, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.landing-card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 229, 255, 0.2),
+    rgba(255, 64, 129, 0.1),
+    rgba(0, 229, 255, 0.05),
+    rgba(255, 64, 129, 0.2)
+  );
+  background-size: 300% 300%;
+  animation: glow-shift 6s ease-in-out infinite;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+@keyframes glow-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes landing-card-enter {
+  0% { opacity: 0; transform: translateY(25px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Glowing input */
+.landing-input {
+  border: 1px solid rgba(0, 229, 255, 0.15);
+  transition: all var(--transition-fast);
+}
+
+.landing-input:focus {
+  border-color: var(--accent-cyan);
+  box-shadow:
+    0 0 0 3px rgba(0, 229, 255, 0.08),
+    0 0 20px rgba(0, 229, 255, 0.1),
+    inset 0 0 12px rgba(0, 229, 255, 0.03);
+}
+
+/* Exit animation */
+.landing-exit {
+  animation: landing-page-exit 0.4s ease forwards !important;
+}
+
+@keyframes landing-page-exit {
+  to {
+    opacity: 0;
+    transform: scale(0.96) translateY(-10px);
+  }
+}
+
+/* Phone landing adjustments */
+@media (max-width: 600px) {
+  .landing-logo-svg {
+    width: 90px;
+    height: 90px;
+  }
+
+  .landing-title .logo-text {
+    font-size: 2.5rem;
+  }
+
+  .landing-card {
+    padding: var(--space-xl);
+    max-width: 340px;
+  }
+}
+
+/* ========================================
+   END LANDING PAGE
+   ======================================== */
+
 .form-group {
   margin-bottom: var(--space-lg);
   text-align: left;

@@ -1,6 +1,6 @@
 {
-  "name": "Lynxt",
-  "short_name": "Lynxt",
+  "name": "lynxt",
+  "short_name": "lynxt",
   "description": "Polite turn management for tabletop games",
   "start_url": "./",
   "scope": "./",
