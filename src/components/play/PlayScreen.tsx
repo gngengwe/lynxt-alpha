@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef, useCallback, useState } from 'react'
 import type { GameState, GameAction } from '../../types'
 import { CircularTable } from './CircularTable'
 import { AdminControls } from './AdminControls'
@@ -11,8 +11,10 @@ interface Props {
 
 export function PlayScreen({ state, dispatch }: Props) {
   const prevPlayerIndex = useRef(state.currentPlayerIndex)
+  const prevTimerRemaining = useRef(state.timerRemaining)
   const hasPlayedExpiredSound = useRef(false)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const [sparklingPlayer, setSparklingPlayer] = useState<number | null>(null)
 
   // Timer tick
   useEffect(() => {
@@ -29,9 +31,17 @@ export function PlayScreen({ state, dispatch }: Props) {
     }
   }, [state.timerRunning, state.timerExpired, dispatch])
 
-  // Sound: turn change chime
+  // Turn change: chime + sparkle detection
   useEffect(() => {
     if (prevPlayerIndex.current !== state.currentPlayerIndex) {
+      // Quick-finish sparkle: finished before warning zone (>33% remaining)
+      const ratio = prevTimerRemaining.current / state.timerDuration
+      if (ratio > 0.33) {
+        const finishedPlayer = prevPlayerIndex.current
+        setSparklingPlayer(finishedPlayer)
+        setTimeout(() => setSparklingPlayer(null), 800)
+      }
+
       if (state.soundEnabled) {
         playAdvanceWhoosh()
         setTimeout(() => playTurnChime(), 150)
@@ -39,7 +49,12 @@ export function PlayScreen({ state, dispatch }: Props) {
       prevPlayerIndex.current = state.currentPlayerIndex
       hasPlayedExpiredSound.current = false
     }
-  }, [state.currentPlayerIndex, state.soundEnabled])
+  }, [state.currentPlayerIndex, state.soundEnabled, state.timerDuration])
+
+  // Track timer for sparkle detection
+  useEffect(() => {
+    prevTimerRemaining.current = state.timerRemaining
+  }, [state.timerRemaining])
 
   // Sound: timer warning beeps
   useEffect(() => {
@@ -74,17 +89,15 @@ export function PlayScreen({ state, dispatch }: Props) {
     }
   }, [state.soundEnabled])
 
-  // Wrap dispatch to track turn advances for audio
   const wrappedDispatch = useCallback((action: GameAction) => {
     dispatch(action)
   }, [dispatch])
 
   return (
     <div className="play-screen">
-      <CircularTable state={state} dispatch={wrappedDispatch} />
+      <CircularTable state={state} dispatch={wrappedDispatch} sparklingPlayer={sparklingPlayer} />
       <AdminControls state={state} dispatch={wrappedDispatch} />
 
-      {/* Turn counter */}
       <div className="turn-counter">
         Turn {state.turnCount}
       </div>

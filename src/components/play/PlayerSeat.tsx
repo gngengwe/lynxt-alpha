@@ -4,15 +4,17 @@ import { getPenaltyIcon } from '../../utils/colors'
 interface Props {
   player: Player
   isActive: boolean
+  isNextUp: boolean
   isUrgent: boolean
   isExpired: boolean
+  sparkle: boolean
+  seatIndex: number
   angle: number
   radius: number
   onClick: () => void
 }
 
-export function PlayerSeat({ player, isActive, isUrgent, isExpired, angle, radius, onClick }: Props) {
-  // Convert angle to position on the circle
+export function PlayerSeat({ player, isActive, isNextUp, isUrgent, isExpired, sparkle, seatIndex, angle, radius, onClick }: Props) {
   const radians = (angle - 90) * (Math.PI / 180)
   const x = 50 + radius * Math.cos(radians)
   const y = 50 + radius * Math.sin(radians)
@@ -26,9 +28,11 @@ export function PlayerSeat({ player, isActive, isUrgent, isExpired, angle, radiu
     else if (isUrgent) seatClass += ' urgent'
   } else {
     seatClass += ' inactive'
+    seatClass += ` idle-float-${(seatIndex % 4) + 1}`
+    if (isNextUp) seatClass += ' next-up'
   }
+  if (sparkle) seatClass += ' sparkle'
 
-  // Show individual icons for <= 3 penalties, then show count
   const penaltyDisplay = () => {
     if (player.delayPenalties === 0) return null
     if (player.delayPenalties <= 3) {
@@ -55,6 +59,7 @@ export function PlayerSeat({ player, isActive, isUrgent, isExpired, angle, radiu
         left: `${x}%`,
         top: `${y}%`,
         '--glow-color': player.color,
+        '--seat-color': player.color,
       } as React.CSSProperties}
       onClick={onClick}
     >
@@ -70,6 +75,7 @@ export function PlayerSeat({ player, isActive, isUrgent, isExpired, angle, radiu
       </div>
       <span className="seat-name">{player.name}</span>
       {penaltyDisplay()}
+      {sparkle && <div className="sparkle-burst" />}
     </div>
   )
 }

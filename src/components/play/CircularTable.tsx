@@ -6,20 +6,24 @@ import { TimerRing } from './Timer'
 interface Props {
   state: GameState
   dispatch: React.Dispatch<GameAction>
+  sparklingPlayer: number | null
 }
 
-// Convert hex color to RGB string for CSS variables
 function hexToRgb(hex: string): string {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
   if (!result) return '255, 255, 255'
   return `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`
 }
 
-export function CircularTable({ state, dispatch }: Props) {
-  const { players, currentPlayerIndex, timerRemaining, timerDuration, timerExpired } = state
+export function CircularTable({ state, dispatch, sparklingPlayer }: Props) {
+  const { players, currentPlayerIndex, timerRemaining, timerDuration, timerExpired, direction } = state
   const activePlayer = players[currentPlayerIndex]
   const timerRatio = timerRemaining / timerDuration
   const isUrgent = timerRatio <= 0.33 && !timerExpired
+
+  // Compute next player index
+  const delta = direction === 'clockwise' ? 1 : -1
+  const nextPlayerIndex = ((currentPlayerIndex + delta) % players.length + players.length) % players.length
 
   const handleDone = () => {
     dispatch({ type: 'ADVANCE_TURN' })
@@ -33,7 +37,6 @@ export function CircularTable({ state, dispatch }: Props) {
 
   return (
     <div className="table-container">
-      {/* Table surface with active player glow */}
       <div
         className={`table-surface ${activePlayer ? 'has-active' : ''}`}
         style={{
@@ -41,7 +44,6 @@ export function CircularTable({ state, dispatch }: Props) {
         } as React.CSSProperties}
       />
 
-      {/* Timer ring */}
       <TimerRing
         remaining={timerRemaining}
         duration={timerDuration}
@@ -49,7 +51,6 @@ export function CircularTable({ state, dispatch }: Props) {
         color={activePlayer.color}
       />
 
-      {/* Player seats */}
       {players.map((player, index) => {
         const angle = (360 / players.length) * index
         return (
@@ -57,8 +58,11 @@ export function CircularTable({ state, dispatch }: Props) {
             key={player.id}
             player={player}
             isActive={index === currentPlayerIndex}
+            isNextUp={index === nextPlayerIndex}
             isUrgent={isUrgent}
             isExpired={timerExpired}
+            sparkle={sparklingPlayer === index}
+            seatIndex={index}
             angle={angle}
             radius={42}
             onClick={() => handleSeatClick(index)}
@@ -66,7 +70,6 @@ export function CircularTable({ state, dispatch }: Props) {
         )
       })}
 
-      {/* Center display */}
       <TurnDisplay
         player={activePlayer}
         timerRemaining={timerRemaining}

@@ -707,6 +707,146 @@
 }
 
 /* ========================================
+   IDLE FLOATING (inactive seats bob gently)
+   ======================================== */
+
+.player-seat.idle-float-1 {
+  animation: idle-bob-1 4s ease-in-out infinite;
+}
+.player-seat.idle-float-2 {
+  animation: idle-bob-2 4.6s ease-in-out infinite;
+}
+.player-seat.idle-float-3 {
+  animation: idle-bob-3 5.2s ease-in-out infinite;
+}
+.player-seat.idle-float-4 {
+  animation: idle-bob-4 3.8s ease-in-out infinite;
+}
+
+@keyframes idle-bob-1 {
+  0%, 100% { transform: translate(-50%, -50%) scale(0.85) translateY(0); }
+  50% { transform: translate(-50%, -50%) scale(0.85) translateY(-4px); }
+}
+@keyframes idle-bob-2 {
+  0%, 100% { transform: translate(-50%, -50%) scale(0.85) translateY(0); }
+  50% { transform: translate(-50%, -50%) scale(0.85) translateY(-5px); }
+}
+@keyframes idle-bob-3 {
+  0%, 100% { transform: translate(-50%, -50%) scale(0.85) translateY(0); }
+  50% { transform: translate(-50%, -50%) scale(0.85) translateY(-3px); }
+}
+@keyframes idle-bob-4 {
+  0%, 100% { transform: translate(-50%, -50%) scale(0.85) translateY(0); }
+  50% { transform: translate(-50%, -50%) scale(0.85) translateY(-6px); }
+}
+
+/* ========================================
+   NEXT-UP GLOW (next player warms up)
+   ======================================== */
+
+.player-seat.next-up {
+  opacity: 0.55;
+}
+
+.player-seat.next-up .seat-avatar {
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.08) !important;
+  animation: next-up-shimmer 2.5s ease-in-out infinite;
+}
+
+.player-seat.next-up .seat-name {
+  color: var(--text-secondary);
+}
+
+@keyframes next-up-shimmer {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.06);
+    opacity: 0.85;
+  }
+  50% {
+    box-shadow: 0 0 18px var(--seat-color, rgba(255, 255, 255, 0.15));
+    opacity: 1;
+  }
+}
+
+/* ========================================
+   PENALTY ICON WIGGLE
+   ======================================== */
+
+.seat-penalties .penalty-badge {
+  animation: pop-in 0.3s ease, penalty-wiggle 3s ease-in-out 1s infinite;
+}
+
+.seat-penalties .penalty-badge:nth-child(2) {
+  animation-delay: 0.3s, 1.5s;
+}
+
+.seat-penalties .penalty-badge:nth-child(3) {
+  animation-delay: 0.6s, 2s;
+}
+
+@keyframes penalty-wiggle {
+  0%, 85%, 100% { transform: rotate(0deg); }
+  88% { transform: rotate(-12deg); }
+  91% { transform: rotate(10deg); }
+  94% { transform: rotate(-8deg); }
+  97% { transform: rotate(4deg); }
+}
+
+/* ========================================
+   QUICK-FINISH SPARKLE
+   ======================================== */
+
+.player-seat.sparkle .seat-avatar::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
+  animation: sparkle-burst 0.8s ease-out forwards;
+  pointer-events: none;
+}
+
+.sparkle-burst {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.sparkle-burst::before,
+.sparkle-burst::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  animation: sparkle-ring 0.8s ease-out forwards;
+}
+
+.sparkle-burst::before {
+  inset: -20px;
+  border: 2px solid var(--seat-color, rgba(255, 255, 255, 0.4));
+  animation-delay: 0s;
+}
+
+.sparkle-burst::after {
+  inset: -30px;
+  border: 1px solid var(--seat-color, rgba(255, 255, 255, 0.2));
+  animation-delay: 0.1s;
+}
+
+@keyframes sparkle-burst {
+  0% { opacity: 1; transform: scale(0.5); }
+  100% { opacity: 0; transform: scale(2); }
+}
+
+@keyframes sparkle-ring {
+  0% { opacity: 0.8; transform: scale(0.3); }
+  100% { opacity: 0; transform: scale(1.5); }
+}
+
+/* ========================================
    TIMER RING (SVG)
    ======================================== */
 
