@@ -54,11 +54,6 @@ export function AdminLogin({ state, dispatch }: Props) {
         <LogoIcon />
       </div>
 
-      {/* Wordmark */}
-      <h1 className="landing-title">
-        <span className="logo-text">lynxt</span>
-      </h1>
-
       {/* Login card */}
       <div className="landing-card glass-panel">
         <form onSubmit={handleSubmit}>
