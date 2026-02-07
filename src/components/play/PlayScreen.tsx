@@ -39,7 +39,7 @@ export function PlayScreen({ state, dispatch }: Props) {
       if (ratio > 0.33) {
         const finishedPlayer = prevPlayerIndex.current
         setSparklingPlayer(finishedPlayer)
-        setTimeout(() => setSparklingPlayer(null), 800)
+        setTimeout(() => setSparklingPlayer(null), 1200)
       }
 
       if (state.soundEnabled) {

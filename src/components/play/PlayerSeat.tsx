@@ -32,6 +32,8 @@ export function PlayerSeat({ player, isActive, isNextUp, isUrgent, isExpired, sp
     if (isNextUp) seatClass += ' next-up'
   }
   if (sparkle) seatClass += ' sparkle'
+  if (player.delayPenalties >= 1) seatClass += ' has-penalties'
+  if (player.delayPenalties >= 3) seatClass += ' has-heavy-penalties'
 
   const penaltyDisplay = () => {
     if (player.delayPenalties === 0) return null
@@ -75,7 +77,21 @@ export function PlayerSeat({ player, isActive, isNextUp, isUrgent, isExpired, sp
       </div>
       <span className="seat-name">{player.name}</span>
       {penaltyDisplay()}
-      {sparkle && <div className="sparkle-burst" />}
+      {sparkle && (
+        <>
+          <div className="sparkle-burst" />
+          <div className="sparkle-ring-3" />
+          <div className="sparkle-cross" />
+          <div className="sparkle-particles">
+            <div className="sparkle-dot" />
+            <div className="sparkle-dot" />
+            <div className="sparkle-dot" />
+            <div className="sparkle-dot" />
+            <div className="sparkle-dot" />
+            <div className="sparkle-dot" />
+          </div>
+        </>
+      )}
     </div>
   )
 }
